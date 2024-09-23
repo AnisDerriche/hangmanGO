@@ -45,17 +45,19 @@ func :
 */
 import (
 	"fmt"
+	"os"
 )
 
 var reponse bool = false
 
 func main() {
-	var i string
-	print(reponse)
-	fmt.Printf("entre une lettre :")
-	fmt.Scan(&i)
-	fmt.Println(lettre_propose(&i))
+	// var i string
+	// print(reponse)
+	// fmt.Printf("entre une lettre :")
+	// fmt.Scan(&i)
+	// fmt.Println(lettre_propose(&i))
 	fmt.Println(nombre_essai())
+	fmt.Println(affPendu())
 }
 
 func lettre_propose(n *string) string {
@@ -65,4 +67,21 @@ func lettre_propose(n *string) string {
 func nombre_essai() int {
 	nbr_essai := 10
 	return nbr_essai
+}
+
+func affPendu() int {
+	var pendu []string
+	nombre_essai()
+	if nombre_essai() == 10 {
+		file, err := os.ReadFile("hangman.txt")
+		for _, char := range file {
+			pendu = append(pendu, string(char))
+		}
+		if err != nil {
+			fmt.Println(err)
+		} else {
+			fmt.Println(pendu)
+		}
+	}
+	return 3
 }
