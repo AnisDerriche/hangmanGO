@@ -43,6 +43,7 @@ func :
 - nombre restant d'essais et affichage du pendu
 
 */
+<<<<<<< HEAD
 
 import (
 	"bufio"
@@ -68,4 +69,28 @@ func MotRandom() {
 	i := rand.Intn(len(lines) - 1)
 	fmt.Println(lines[i])
 	mot.Close()
+=======
+import (
+	"fmt"
+)
+
+var reponse bool = false
+
+func main() {
+	var i string
+	print(reponse)
+	fmt.Printf("entre une lettre :")
+	fmt.Scan(&i)
+	fmt.Println(lettre_propose(&i))
+	fmt.Println(nombre_essai())
+}
+
+func lettre_propose(n *string) string {
+	return ("lettre --> " + *n)
+}
+
+func nombre_essai() int {
+	nbr_essai := 10
+	return nbr_essai
+>>>>>>> e38ea66628e54f5c2cc27a80d14123a3d70647cf
 }
