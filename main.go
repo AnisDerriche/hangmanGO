@@ -43,3 +43,29 @@ func :
 - nombre restant d'essais et affichage du pendu
 
 */
+
+import (
+	"bufio"
+	"fmt"
+	"math/rand"
+	"os"
+)
+
+func main() {
+	MotRandom()
+}
+
+func MotRandom() {
+	mot, err := os.Open("words.txt")
+	if err != nil {
+		fmt.Println(err)
+	}
+	var lines []string
+	scanner := bufio.NewScanner(mot)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	i := rand.Intn(len(lines) - 1)
+	fmt.Println(lines[i])
+	mot.Close()
+}
