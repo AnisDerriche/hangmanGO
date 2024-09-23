@@ -47,13 +47,22 @@ import (
 	"fmt"
 )
 
+var reponse bool = false
+
 func main() {
 	var i string
+	print(reponse)
 	fmt.Printf("entre une lettre :")
 	fmt.Scan(&i)
 	fmt.Println(lettre_propose(&i))
+	fmt.Println(nombre_essai())
 }
 
 func lettre_propose(n *string) string {
 	return ("lettre --> " + *n)
+}
+
+func nombre_essai() int {
+	nbr_essai := 10
+	return nbr_essai
 }
