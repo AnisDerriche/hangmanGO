@@ -43,7 +43,6 @@ func :
 - nombre restant d'essais et affichage du pendu
 
 */
-<<<<<<< HEAD
 
 import (
 	"bufio"
@@ -62,6 +61,7 @@ func main() {
 	fmt.Println(affPendu())
 	MotRandom()
 }
+
 var reponse bool = false
 
 func MotRandom() {
