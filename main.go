@@ -43,3 +43,17 @@ func :
 - nombre restant d'essais et affichage du pendu
 
 */
+import (
+	"fmt"
+)
+
+func main() {
+	var i string
+	fmt.Printf("entre une lettre :")
+	fmt.Scan(&i)
+	fmt.Println(lettre_propose(&i))
+}
+
+func lettre_propose(n *string) string {
+	return ("lettre --> " + *n)
+}
