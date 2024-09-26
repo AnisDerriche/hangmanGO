@@ -79,7 +79,7 @@ func MotRandom() {
 	MelMot(word)
 }
 
-func MelMot(word string) {
+func MelMot(word string) string {
 	rune := []rune(word)
 	long := len(word)
 	letter := len(word)/2 - 1
@@ -94,7 +94,7 @@ func MelMot(word string) {
 		rune[n] = 95
 	}
 	newword := string(rune)
-	fmt.Println(newword)
+	return newword
 }
 
 func lettre_propose(n *string) string {
