@@ -53,7 +53,6 @@ import (
 
 func main() {
 	var i string
-	print(reponse)
 	fmt.Printf("entre une lettre :")
 	fmt.Scan(&i)
 	lettre_propose(&i)
