@@ -96,8 +96,8 @@ func MelMot(word string) {
 		}
 		rune[n] = 95
 	}
-	nword := string(rune)
-	fmt.Println(nword)
+	newword := string(rune)
+	fmt.Println(newword)
 }
 
 func lettre_propose(n *string) string {
@@ -109,8 +109,17 @@ func nombre_essai() int {
 	return nbr_essai
 }
 
+func Rep() {
+	lipos := 8
+
+	affPendu()
+	lipos += 8
+}
+
 func affPendu() {
 	file, err := os.Open("hangman.txt")
+	liposbis := -1
+	lipos := 7
 	if nombre_essai() == 10 {
 		if err != nil {
 			fmt.Println(err)
@@ -118,10 +127,14 @@ func affPendu() {
 			scanner := bufio.NewScanner(file)
 			lineNumber := 0
 			for scanner.Scan() {
-				if lineNumber > 8 {
+				if lineNumber < liposbis {
+					lineNumber++
+					continue
+				}
+				if lineNumber > lipos {
 					break
 				}
-				fmt.Println(scanner.Text(), '\n')
+				fmt.Println(scanner.Text())
 				lineNumber++
 			}
 		}
