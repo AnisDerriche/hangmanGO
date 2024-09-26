@@ -54,11 +54,10 @@ import (
 func main() {
 	fmt.Println("Good Luck, you have 10 attempts.")
 	MotRandom()
-	// var i string
-	// print(reponse)
-	// fmt.Printf("entre une lettre :")
-	// fmt.Scan(&i)
-	// fmt.Println(lettre_propose(&i))
+	var i string
+	fmt.Printf("entre une lettre :")
+	fmt.Scan(&i)
+	fmt.Println(lettre_propose(&i))
 	//fmt.Println(nombre_essai())
 	//fmt.Println(affPendu())
 	//nombre_essai()
@@ -127,7 +126,7 @@ func affPendu() {
 			fmt.Println(err)
 		} else {
 			scanner := bufio.NewScanner(file)
-			lineNumber := 0
+			lineNumber := 5
 			for scanner.Scan() {
 				if lineNumber < liposbis {
 					lineNumber++
@@ -141,75 +140,5 @@ func affPendu() {
 			}
 		}
 	}
-	// if nombre_essai() == 9 {
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 	} else {
-	// 		fmt.Println(pendu[80:157])
-	// 	}
-	// }
-	// if nombre_essai() == 8 {
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 	} else {
-	// 		fmt.Println(pendu[158:235])
-	// 	}
-	// }
-	// if nombre_essai() == 7 {
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 	} else {
-	// 		fmt.Println(pendu[237:313])
-	// 	}
-	// }
-	// if nombre_essai() == 6 {
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 	} else {
-	// 		fmt.Println(pendu[320:391])
-	// 	}
-	// }
-	// if nombre_essai() == 5 {
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 	} else {
-	// 		fmt.Println(pendu[397:469])
-	// 	}
-	// }
-	// if nombre_essai() == 4 {
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 	} else {
-	// 		fmt.Println(pendu[475:547])
-	// 	}
-	// }
-	// if nombre_essai() == 3 {
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 	} else {
-	// 		fmt.Println(pendu[552:625])
-	// 	}
-	// }
-	// if nombre_essai() == 2 {
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 	} else {
-	// 		fmt.Println(pendu[630:703])
-	// 	}
-	// }
-	// if nombre_essai() == 1 {
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 	} else {
-	// 		fmt.Println(pendu[708:789])
-	// 	}
-	// }
-	// if nombre_essai() == 0 {
-	// 	if err != nil {
-	// 		fmt.Println(err)
-	// 	} else {
-	// 		fmt.Println(pendu[787:858])
-	// 	}
-	// }
 	return
 }
