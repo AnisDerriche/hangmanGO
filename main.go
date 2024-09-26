@@ -57,9 +57,8 @@ func main() {
 	// fmt.Printf("entre une lettre :")
 	// fmt.Scan(&i)
 	// fmt.Println(lettre_propose(&i))
-	fmt.Println(nombre_essai())
-	fmt.Println(affPendu())
-	MotRandom()
+	nombre_essai()
+	affPendu()
 }
 
 var reponse bool = false
@@ -88,19 +87,88 @@ func nombre_essai() int {
 	return nbr_essai
 }
 
-func affPendu() int {
+func affPendu() {
 	var pendu []string
-	nombre_essai()
+	file, err := os.ReadFile("hangman.txt")
+	for _, char := range file {
+		pendu = append(pendu, string(char))
+	}
 	if nombre_essai() == 10 {
-		file, err := os.ReadFile("hangman.txt")
-		for _, char := range file {
-			pendu = append(pendu, string(char))
-		}
 		if err != nil {
 			fmt.Println(err)
 		} else {
-			fmt.Println(pendu)
+			fmt.Print(pendu[0:78])
 		}
 	}
-	return 3
+	// if nombre_essai() == 9 {
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	} else {
+	// 		fmt.Println(pendu[80:157])
+	// 	}
+	// }
+	// if nombre_essai() == 8 {
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	} else {
+	// 		fmt.Println(pendu[158:235])
+	// 	}
+	// }
+	// if nombre_essai() == 7 {
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	} else {
+	// 		fmt.Println(pendu[237:313])
+	// 	}
+	// }
+	// if nombre_essai() == 6 {
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	} else {
+	// 		fmt.Println(pendu[320:391])
+	// 	}
+	// }
+	// if nombre_essai() == 5 {
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	} else {
+	// 		fmt.Println(pendu[397:469])
+	// 	}
+	// }
+	// if nombre_essai() == 4 {
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	} else {
+	// 		fmt.Println(pendu[475:547])
+	// 	}
+	// }
+	// if nombre_essai() == 3 {
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	} else {
+	// 		fmt.Println(pendu[552:625])
+	// 	}
+	// }
+	// if nombre_essai() == 2 {
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	} else {
+	// 		fmt.Println(pendu[630:703])
+	// 	}
+	// }
+	// if nombre_essai() == 1 {
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	} else {
+	// 		fmt.Println(pendu[708:789])
+	// 	}
+	// }
+	// if nombre_essai() == 0 {
+	// 	if err != nil {
+	// 		fmt.Println(err)
+	// 	} else {
+	// 		fmt.Println(pendu[787:858])
+	// 	}
+	// }
+	return
 }
