@@ -43,7 +43,6 @@ func :
 - nombre restant d'essais et affichage du pendu
 
 */
-<<<<<<< HEAD
 
 import (
 	"bufio"
@@ -58,10 +57,11 @@ func main() {
 	// fmt.Printf("entre une lettre :")
 	// fmt.Scan(&i)
 	// fmt.Println(lettre_propose(&i))
-	fmt.Println(nombre_essai())
-	fmt.Println(affPendu())
-	MotRandom()
+	//fmt.Println(nombre_essai())
+	//fmt.Println(affPendu())
+	test()
 }
+
 var reponse bool = false
 
 func MotRandom() {
@@ -75,8 +75,28 @@ func MotRandom() {
 		lines = append(lines, scanner.Text())
 	}
 	i := rand.Intn(len(lines) - 1)
-	fmt.Println(lines[i])
+	word := lines[i]
+	fmt.Println(word)
 	mot.Close()
+	MelMot(word)
+}
+
+func MelMot(word string) {
+	rune := []rune(word)
+	long := len(word)
+	letter := len(word)/2 - 1
+	if long <= 3 {
+		letter = 1
+	}
+	for i := 1; i <= long-letter; i++ {
+		n := rand.Intn(len(word))
+		if rune[n] == 95 {
+			i--
+		}
+		rune[n] = 95
+	}
+	nword := string(rune)
+	fmt.Println(nword)
 }
 
 func lettre_propose(n *string) string {
@@ -103,4 +123,21 @@ func affPendu() int {
 		}
 	}
 	return 3
+}
+
+func test() {
+	pos, err := os.Open("hangman.txt")
+	if err != nil {
+		fmt.Println(err)
+	}
+	var lines []string
+	scanner := bufio.NewScanner(mot)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	i := rand.Intn(len(lines) - 1)
+	word := lines[i]
+	fmt.Println(word)
+	mot.Close()
+	MelMot(word)
 }
