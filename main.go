@@ -52,13 +52,11 @@ import (
 )
 
 func main() {
-	// var i string
-	// print(reponse)
-	// fmt.Printf("entre une lettre :")
-	// fmt.Scan(&i)
-	// fmt.Println(lettre_propose(&i))
-	//fmt.Println(nombre_essai())
-	//fmt.Println(affPendu())
+	var i string
+	print(reponse)
+	fmt.Printf("entre une lettre :")
+	fmt.Scan(&i)
+	lettre_propose(&i)
 	nombre_essai()
 	affPendu()
 }
@@ -116,12 +114,12 @@ func affPendu() {
 			fmt.Println(err)
 		} else {
 			scanner := bufio.NewScanner(file)
-			lineNumber := 0
+			lineNumber := 5
 			for scanner.Scan() {
-				if lineNumber > 8 {
+				if lineNumber > 15 {
 					break
 				}
-				fmt.Println(scanner.Text(), '\n')
+				fmt.Println(scanner.Text())
 				lineNumber++
 			}
 		}
