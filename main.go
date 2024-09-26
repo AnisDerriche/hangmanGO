@@ -25,7 +25,7 @@ _ E _ _ O
 
 Choose: A
 Not present in the word, 9 attempts remaining
-
+!-
 
 
 
@@ -52,17 +52,20 @@ import (
 )
 
 func main() {
+	fmt.Println("Good Luck, you have 10 attempts.")
+	MotRandom()
+	MelMot(MotRandom())
 	var i string
 	fmt.Printf("entre une lettre :")
 	fmt.Scan(&i)
-	lettre_propose(&i)
-	nombre_essai()
-	affPendu()
+	fmt.Println(lettre_propose(&i))
+	//nombre_essai()
+	//affPendu()
 }
 
 var reponse bool = false
 
-func MotRandom() {
+func MotRandom() string {
 	mot, err := os.Open("words.txt")
 	if err != nil {
 		fmt.Println(err)
@@ -74,27 +77,27 @@ func MotRandom() {
 	}
 	i := rand.Intn(len(lines) - 1)
 	word := lines[i]
-	fmt.Println(word)
 	mot.Close()
-	MelMot(word)
+	return word
 }
 
-func MelMot(word string) string {
-	rune := []rune(word)
-	long := len(word)
-	letter := len(word)/2 - 1
+func MelMot(word string) {
+	mot := MotRandom()
+	rune := []rune(mot)
+	long := len(mot)
+	letter := len(mot)/2 - 1
 	if long <= 3 {
 		letter = 1
 	}
 	for i := 1; i <= long-letter; i++ {
-		n := rand.Intn(len(word))
+		n := rand.Intn(len(mot))
 		if rune[n] == 95 {
 			i--
 		}
 		rune[n] = 95
 	}
 	newword := string(rune)
-	return newword
+	fmt.Println(newword)
 }
 
 func lettre_propose(n *string) string {
