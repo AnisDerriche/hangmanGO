@@ -57,6 +57,8 @@ func main() {
 	// fmt.Printf("entre une lettre :")
 	// fmt.Scan(&i)
 	// fmt.Println(lettre_propose(&i))
+	//fmt.Println(nombre_essai())
+	//fmt.Println(affPendu())
 	nombre_essai()
 	affPendu()
 }
@@ -74,8 +76,28 @@ func MotRandom() {
 		lines = append(lines, scanner.Text())
 	}
 	i := rand.Intn(len(lines) - 1)
-	fmt.Println(lines[i])
+	word := lines[i]
+	fmt.Println(word)
 	mot.Close()
+	MelMot(word)
+}
+
+func MelMot(word string) {
+	rune := []rune(word)
+	long := len(word)
+	letter := len(word)/2 - 1
+	if long <= 3 {
+		letter = 1
+	}
+	for i := 1; i <= long-letter; i++ {
+		n := rand.Intn(len(word))
+		if rune[n] == 95 {
+			i--
+		}
+		rune[n] = 95
+	}
+	nword := string(rune)
+	fmt.Println(nword)
 }
 
 func lettre_propose(n *string) string {
