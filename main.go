@@ -25,7 +25,7 @@ _ E _ _ O
 
 Choose: A
 Not present in the word, 9 attempts remaining
-
+!-
 
 
 
@@ -52,6 +52,8 @@ import (
 )
 
 func main() {
+	fmt.Println("Good Luck, you have 10 attempts.")
+	MotRandom()
 	// var i string
 	// print(reponse)
 	// fmt.Printf("entre une lettre :")
@@ -59,8 +61,8 @@ func main() {
 	// fmt.Println(lettre_propose(&i))
 	//fmt.Println(nombre_essai())
 	//fmt.Println(affPendu())
-	nombre_essai()
-	affPendu()
+	//nombre_essai()
+	//affPendu()
 }
 
 var reponse bool = false
@@ -77,7 +79,7 @@ func MotRandom() {
 	}
 	i := rand.Intn(len(lines) - 1)
 	word := lines[i]
-	fmt.Println(word)
+	//fmt.Println(word)
 	mot.Close()
 	MelMot(word)
 }
