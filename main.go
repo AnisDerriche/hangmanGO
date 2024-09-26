@@ -88,16 +88,20 @@ func nombre_essai() int {
 }
 
 func affPendu() {
-	var pendu []string
-	file, err := os.ReadFile("hangman.txt")
-	for _, char := range file {
-		pendu = append(pendu, string(char))
-	}
+	file, err := os.Open("hangman.txt")
 	if nombre_essai() == 10 {
 		if err != nil {
 			fmt.Println(err)
 		} else {
-			fmt.Print(pendu[0:78])
+			scanner := bufio.NewScanner(file)
+			lineNumber := 0
+			for scanner.Scan() {
+				if lineNumber > 8 {
+					break
+				}
+				fmt.Println(scanner.Text(), '\n')
+				lineNumber++
+			}
 		}
 	}
 	// if nombre_essai() == 9 {
