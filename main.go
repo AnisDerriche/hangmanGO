@@ -66,23 +66,25 @@ func main() {
 var reponse bool = false
 
 func MotRandom() string {
+	/* prends un mot au hasard dans words.txt */
 	mot, err := os.Open("words.txt")
 	if err != nil {
 		fmt.Println(err)
 	}
-	var lines []string
+	var lines []string //met dans une liste les mots present dans words.txt
 	scanner := bufio.NewScanner(mot)
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
 	i := rand.Intn(len(lines) - 1)
-	word := lines[i]
+	word := lines[i] //le mots pris au hasard
 	mot.Close()
 	return word
 }
 
 func MelMot(word string) {
-	mot := MotRandom()
+	/*cache les lettres du mot*/
+	mot := MotRandom() //reprise du mot pioché au hasard dans la fonction MotRandom
 	rune := []rune(mot)
 	long := len(mot)
 	letter := len(mot)/2 - 1
@@ -91,20 +93,22 @@ func MelMot(word string) {
 	}
 	for i := 1; i <= long-letter; i++ {
 		n := rand.Intn(len(mot))
-		if rune[n] == 95 {
+		if rune[n] == 95 /*95(ASCII) == _ */ {
 			i--
 		}
 		rune[n] = 95
 	}
-	newword := string(rune)
+	newword := string(rune) // le mot est en rune etant donné qu'on l'a modif avec un caractère ASCII
 	fmt.Println(newword)
 }
 
 func lettre_propose(n *string) string {
+	/* fonction en plus qui permet de voir la lettre mis mais peut être supp et placer ailleur*/
 	return ("lettre --> " + *n)
 }
 
 func nombre_essai() int {
+	/* affiche le nombre d'essai restant (de base a 10)*/
 	nbr_essai := 10
 	return nbr_essai
 }
@@ -117,6 +121,7 @@ func Rep() {
 }
 
 func affPendu() {
+	/* affiche le pendu selon le nombre d'essais restant */
 	file, err := os.Open("hangman.txt")
 	liposbis := -1
 	lipos := 7
@@ -126,7 +131,7 @@ func affPendu() {
 		} else {
 			scanner := bufio.NewScanner(file)
 			lineNumber := 5
-			for scanner.Scan() {
+			for scanner.Scan() { //cette boucle permet ,selon le nombre d'essai restant dafficher le pendu.
 				if lineNumber < liposbis {
 					lineNumber++
 					continue
