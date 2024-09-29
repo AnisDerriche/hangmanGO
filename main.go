@@ -52,18 +52,20 @@ import (
 )
 
 func main() {
-	fmt.Println("Good Luck, you have 10 attempts.")
-	MotRandom()
-	MelMot(MotRandom())
-	var i string
-	fmt.Printf("entre une lettre :")
-	fmt.Scan(&i)
-	fmt.Println(lettre_propose(&i))
-	//nombre_essai()
-	//affPendu()
+	// fmt.Println("Good Luck, you have 10 attempts.")
+	// MotRandom()
+	// MelMot(MotRandom())
+	// var i string
+	// fmt.Printf("entre une lettre :")
+	// fmt.Scan(&i)
+	// fmt.Println(lettre_propose(&i))
+	// nombre_essai()
+	// ffPendu()
+	game()
 }
 
 var reponse bool = false
+var gagner bool = true
 
 func MotRandom() string {
 	/* prends un mot au hasard dans words.txt */
@@ -84,8 +86,8 @@ func MotRandom() string {
 
 func MelMot(word string) {
 	/*cache les lettres du mot*/
-	mot := MotRandom() //reprise du mot pioché au hasard dans la fonction MotRandom
-	rune := []rune(mot)
+	mot := "az"
+	rune1 := []rune(mot)
 	long := len(mot)
 	letter := len(mot)/2 - 1
 	if long <= 3 {
@@ -93,12 +95,12 @@ func MelMot(word string) {
 	}
 	for i := 1; i <= long-letter; i++ {
 		n := rand.Intn(len(mot))
-		if rune[n] == 95 /*95(ASCII) == _ */ {
+		if rune1[n] == 95 /*95(ASCII) == _ */ {
 			i--
 		}
-		rune[n] = 95
+		rune1[n] = 95
 	}
-	newword := string(rune) // le mot est en rune etant donné qu'on l'a modif avec un caractère ASCII
+	newword := string(rune1) // le mot est en rune etant donné qu'on l'a modif avec un caractère ASCII
 	fmt.Println(newword)
 }
 
@@ -113,12 +115,14 @@ func nombre_essai() int {
 	return nbr_essai
 }
 
-func Rep() {
-	lipos := 8
+/*
+	func Rep() {
+		lipos := 8
 
-	affPendu()
-	lipos += 8
-}
+		affPendu()
+		lipos += 8
+	}
+*/
 
 func affPendu() {
 	/* affiche le pendu selon le nombre d'essais restant */
@@ -145,4 +149,77 @@ func affPendu() {
 		}
 	}
 	return
+}
+
+func game() {
+	/* prends un mot au hasard dans words.txt */
+	mot, err := os.Open("words.txt")
+	if err != nil {
+		fmt.Println(err)
+	}
+	var lines []string //met dans une liste les mots present dans words.txt
+	scanner := bufio.NewScanner(mot)
+	for scanner.Scan() {
+		lines = append(lines, scanner.Text())
+	}
+	i := rand.Intn(len(lines) - 1)
+	word := lines[i] //le mots pris au hasard
+	mot.Close()
+	/* fin de la partie du prenage de mot */
+
+	//---------------------------------------------------------------------------------------------------------
+
+	/*cache les lettres du mot*/
+	rune1 := []rune(word)
+	long := len(word)
+	letter := len(word)/2 - 1
+	if long <= 3 {
+		letter = 1
+	}
+	for i := 1; i <= long-letter; i++ {
+		n := rand.Intn(len(word))
+		if rune1[n] == 95 /*95(ASCII) == _ */ {
+			i--
+		}
+		rune1[n] = 95
+	}
+	newword := string(rune1) // le mot est en rune etant donné qu'on l'a modif avec un caractère ASCII
+	fmt.Println(newword)
+	/* fin du cachage de lettre */
+
+	//---------------------------------------------------------------------------------------------------------
+
+	if gagner {
+		/* demande de la lettre */
+		var lettre string
+		fmt.Printf("entre une lettre :")
+		fmt.Scan(&lettre)
+		fmt.Println("lettre --> ", lettre)
+
+		/*nombre d'essai restant*/
+		nbr_essai := 10
+		/* affiche le pendu selon le nombre d'essais restant */
+		file, err := os.Open("hangman.txt")
+		liposbis := 8
+		lipos := 15
+		if nbr_essai == 10 {
+			if err != nil {
+				fmt.Println("aze")
+			} else {
+				scanner := bufio.NewScanner(file)
+				lineNumber := 0
+				for scanner.Scan() { //cette boucle permet ,selon le nombre d'essai restant dafficher le pendu.
+					if lineNumber < liposbis {
+						lineNumber++
+						continue
+					}
+					if lineNumber > lipos {
+						break
+					}
+					fmt.Println(scanner.Text())
+					lineNumber++
+				}
+			}
+		}
+	}
 }
