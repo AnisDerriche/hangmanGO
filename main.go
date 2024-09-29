@@ -188,38 +188,43 @@ func game() {
 	/* fin du cachage de lettre */
 
 	//---------------------------------------------------------------------------------------------------------
-
-	if gagner {
-		/* demande de la lettre */
-		var lettre string
-		fmt.Printf("entre une lettre :")
-		fmt.Scan(&lettre)
-		fmt.Println("lettre --> ", lettre)
-
-		/*nombre d'essai restant*/
-		nbr_essai := 10
-		/* affiche le pendu selon le nombre d'essais restant */
-		file, err := os.Open("hangman.txt")
-		liposbis := 8
-		lipos := 15
-		if nbr_essai == 10 {
-			if err != nil {
-				fmt.Println("aze")
-			} else {
-				scanner := bufio.NewScanner(file)
-				lineNumber := 0
-				for scanner.Scan() { //cette boucle permet ,selon le nombre d'essai restant dafficher le pendu.
-					if lineNumber < liposbis {
+	/*nombre d'essai de base */
+	liposbis := 0
+	lipos := 7
+	nbr_essai := 10
+	for nbrDeTour := -10; nbrDeTour <= nbr_essai; nbrDeTour++ {
+		if gagner {
+			/* demande de la lettre */
+			var lettre string
+			fmt.Printf("entre une lettre :")
+			fmt.Scan(&lettre)
+			fmt.Println("lettre --> ", word)
+			/* affiche le pendu selon le nombre d'essais restant */
+			file, err := os.Open("hangman.txt")
+			if nbr_essai >= 0 {
+				if err != nil {
+					fmt.Println("aze")
+				} else {
+					scanner := bufio.NewScanner(file)
+					lineNumber := 0
+					for scanner.Scan() { //cette boucle permet ,selon le nombre d'essai restant dafficher le pendu.
+						if lineNumber < liposbis {
+							lineNumber++
+							continue
+						}
+						if lineNumber > lipos {
+							break
+						}
+						fmt.Println(scanner.Text())
 						lineNumber++
-						continue
 					}
-					if lineNumber > lipos {
-						break
-					}
-					fmt.Println(scanner.Text())
-					lineNumber++
 				}
+				nbr_essai--
+				liposbis += 8
+				lipos += 8
+				continue
 			}
+			gagner = false
 		}
 	}
 }
