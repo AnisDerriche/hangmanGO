@@ -52,21 +52,6 @@ import (
 )
 
 func main() {
-	fmt.Println("Good Luck, you have 10 attempts.")
-	MotRandom()
-	var i string
-	fmt.Printf("entre une lettre :")
-	fmt.Scan(&i)
-	fmt.Println(lettre_propose(&i))
-	//fmt.Println(nombre_essai())
-	//fmt.Println(affPendu())
-	//nombre_essai()
-	//affPendu()
-}
-
-var reponse bool = false
-
-func MotRandom() {
 	mot, err := os.Open("words.txt")
 	if err != nil {
 		fmt.Println(err)
@@ -80,9 +65,44 @@ func MotRandom() {
 	word := lines[i]
 	//fmt.Println(word)
 	mot.Close()
+	//MelMot(word)
+
+	fmt.Println("Good Luck, you have 10 attempts.")
+
 	MelMot(word)
+	/*var i string
+	fmt.Printf("entre une lettre :")
+	fmt.Scan(&i)
+	fmt.Println(lettre_propose(&i))
+	*/
+	Rep()
+	//fmt.Println(nombre_essai())
+	//fmt.Println(affPendu())
+	//nombre_essai()
+	//affPendu()
 }
 
+var reponse bool = false
+
+/*
+	func MotRandom() string {
+		mot, err := os.Open("words.txt")
+		if err != nil {
+			fmt.Println(err)
+		}
+		var lines []string
+		scanner := bufio.NewScanner(mot)
+		for scanner.Scan() {
+			lines = append(lines, scanner.Text())
+		}
+		i := rand.Intn(len(lines) - 1)
+		word := lines[i]
+		//fmt.Println(word)
+		mot.Close()
+		return word
+		//MelMot(word)
+	}
+*/
 func MelMot(word string) {
 	rune := []rune(word)
 	long := len(word)
@@ -111,10 +131,14 @@ func nombre_essai() int {
 }
 
 func Rep() {
+	fmt.Println(word)
+	/*word = test
+	fo
+
 	lipos := 8
 
 	affPendu()
-	lipos += 8
+	lipos += 8*/
 }
 
 func affPendu() {
