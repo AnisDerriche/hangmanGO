@@ -40,7 +40,7 @@ func :
 - choisir le mot de manière random
 - afficher le mot et cachant des lettres random
 - lettre proposé
-- nombre restant d'essais et affichage du pendu
+- nombre restant d'essais et affichage du pendue
 
 */
 
@@ -126,6 +126,7 @@ func game() {
 					lineNumber++
 				}
 			}
+
 			nbr_essai--
 			liposbis += 8
 			lipos += 8
