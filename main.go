@@ -64,8 +64,6 @@ func main() {
 	game()
 }
 
-var reponse bool = false
-
 func game() {
 	/* prends un mot au hasard dans words.txt */
 	mot, err := os.Open("words.txt")
@@ -103,10 +101,14 @@ func game() {
 	/* fin du cachage de lettre */
 
 	//---------------------------------------------------------------------------------------------------------
+
 	/*nombre d'essai de base */
 	liposbis := 0
 	lipos := 7
 	nbr_essai := 10
+
+	//---------------------------------------------------------------------------------------------------------
+
 	for nbrDeTour := -nbr_essai; nbrDeTour <= nbr_essai; nbrDeTour++ {
 		/* demande de la lettre */
 		var lettre string
