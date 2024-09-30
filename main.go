@@ -75,7 +75,7 @@ func game() {
 	if err != nil {
 		fmt.Println(err)
 	}
-	var lines []string //met dans une liste les mots present dans words.txt
+	var lines []string //met dans une liste les mots present dans words.txxt
 	scanner := bufio.NewScanner(mot)
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
