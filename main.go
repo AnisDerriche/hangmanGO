@@ -52,15 +52,6 @@ import (
 )
 
 func main() {
-	// fmt.Println("Good Luck, you have 10 attempts.")
-	// MotRandom()
-	// MelMot(MotRandom())
-	// var i string
-	// fmt.Printf("entre une lettre :")
-	// fmt.Scan(&i)
-	// fmt.Println(lettre_propose(&i))
-	// nombre_essai()
-	// ffPendu()
 	game()
 }
 
