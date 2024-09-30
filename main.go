@@ -53,6 +53,7 @@ import (
 
 func main() {
 <<<<<<< HEAD
+<<<<<<< HEAD
 =======
 	// fmt.Println("Good Luck, you have 10 attempts.")
 	// MotRandom()
@@ -63,10 +64,10 @@ func main() {
 	// fmt.Println(lettre_propose(&i))
 	// nombre_essai()
 	// ffPendu()
+=======
+>>>>>>> ee4ff5f14fda2f9132657fa53d056ad5ef396e78
 	game()
 }
-
-var reponse bool = false
 
 func game() {
 	/* prends un mot au hasard dans words.txt */
@@ -174,11 +175,15 @@ func affPendu() {
 	liposbis := -1
 =======
 	//---------------------------------------------------------------------------------------------------------
+
 	/*nombre d'essai de base */
 	liposbis := 0
 >>>>>>> 8a15dbb2bd70e999bcad032313fd70354abb46ad
 	lipos := 7
 	nbr_essai := 10
+
+	//---------------------------------------------------------------------------------------------------------
+
 	for nbrDeTour := -nbr_essai; nbrDeTour <= nbr_essai; nbrDeTour++ {
 		/* demande de la lettre */
 		var lettre string
