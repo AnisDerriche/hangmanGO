@@ -87,8 +87,7 @@ func game() {
 		}
 		rune1[n] = 95
 	}
-	newword := string(rune1) // le mot est en rune etant donné qu'on l'a modif avec un caractère ASCII
-	fmt.Println(newword)
+	newword := rune1 // le mot est en rune etant donné qu'on l'a modif avec un caractère ASCII
 	/* fin du cachage de lettre */
 
 	//---------------------------------------------------------------------------------------------------------
@@ -103,9 +102,10 @@ func game() {
 	for nbrDeTour := -nbr_essai; nbrDeTour <= nbr_essai; nbrDeTour++ {
 		/* demande de la lettre */
 		var lettre string
+		fmt.Println(string(newword))
 		fmt.Printf("entre une lettre :")
 		fmt.Scan(&lettre)
-		fmt.Println("lettre --> ", word)
+		fmt.Println("lettre --> ", string(word))
 		/* affiche le pendu selon le nombre d'essais restant */
 		file, err := os.Open("hangman.txt")
 		if nbr_essai >= 0 {
@@ -126,7 +126,15 @@ func game() {
 					lineNumber++
 				}
 			}
-
+			for i := 0; i < len(word); i++ {
+				if string(word[i]) == lettre {
+					// Si la lettre est trouvée, révéler la lettre dans le mot caché
+					newword[i] = rune(lettre[0])
+				}
+			}
+			if string(newword) == word {
+				break
+			}
 			nbr_essai--
 			liposbis += 8
 			lipos += 8
