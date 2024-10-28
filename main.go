@@ -1,49 +1,5 @@
 package main
 
-/*
-
-Mots random dans fichier words.txt
-
-10 essais
-Lettres révélées : len(word) / 2 - 1
-
-si lettre non presente : message erreur et nbr essais restant
-si lettre présente, affiche toutes les lettres présentent dans le mot
-le programme continue tant que le mot n'a pas été trouvé ou que le nombre d'essaie n'est pas egale à 0
-
-hangman position :
-10 positions différentes
-	hauteur de 7 (8 avec retour a la ligne)
-
-exemple :
-$> ./hangman words.txt
-Good Luck, you have 10 attempts.
-_ _ _ _ O
-
-Choose: E
-_ E _ _ O
-
-Choose: A
-Not present in the word, 9 attempts remaining
-!-
-
-
-
-
-
-=========
-...
-
-
-
-func :
-- choisir le mot de manière random
-- afficher le mot et cachant des lettres random
-- lettre proposé
-- nombre restant d'essais et affichage du pendue
-
-*/
-
 import (
 	"bufio"
 	"fmt"
@@ -55,90 +11,176 @@ func main() {
 	game()
 }
 
-func game() {
-	/* prends un mot au hasard dans words.txt */
-	mot, err := os.Open("words.txt")
+// Structure pour stocker l'état de jeu
+type GameState struct {
+	Word              string
+	MaskedWord        string
+	RemainingAttempts int
+}
+
+// Fonction pour sauvegarder l'état de jeu dans save.txt
+func saveGame(state GameState) error {
+	file, err := os.Create("save.txt")
 	if err != nil {
-		fmt.Println(err)
+		return err
 	}
-	var lines []string //met dans une liste les mots present dans words.txxt
-	scanner := bufio.NewScanner(mot)
+	defer file.Close()
+
+	_, err = file.WriteString(fmt.Sprintf("%s\n%s\n%d\n", state.Word, state.MaskedWord, state.RemainingAttempts))
+	if err != nil {
+		return err
+	}
+	fmt.Println("Partie sauvegardée dans save.txt.")
+	return nil
+}
+
+// Fonction pour charger l'état de jeu depuis save.txt
+func loadGame() (GameState, error) {
+	file, err := os.Open("save.txt")
+	if err != nil {
+		return GameState{}, err
+	}
+	defer file.Close()
+
+	var state GameState
+	scanner := bufio.NewScanner(file)
+
+	if scanner.Scan() {
+		state.Word = scanner.Text()
+	}
+	if scanner.Scan() {
+		state.MaskedWord = scanner.Text()
+	}
+	if scanner.Scan() {
+		fmt.Sscanf(scanner.Text(), "%d", &state.RemainingAttempts)
+	}
+	return state, nil
+}
+
+// Lit un mot aléatoire dans le fichier words.txt
+func lectureWord() (string, error) {
+	file, err := os.Open("words.txt")
+	if err != nil {
+		return "", err
+	}
+	defer file.Close()
+
+	var lines []string
+	scanner := bufio.NewScanner(file)
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
-	i := rand.Intn(len(lines) - 1)
-	word := lines[i] //le mots pris au hasard
-	mot.Close()
-	/* fin de la partie du prenage de mot */
-
-	//---------------------------------------------------------------------------------------------------------
-
-	/*cache les lettres du mot*/
-	rune1 := []rune(word)
-	long := len(word)
-	letter := len(word)/2 - 1
-	if long <= 3 {
-		letter = 1
+	if len(lines) == 0 {
+		return "", fmt.Errorf("le fichier words.txt est vide")
 	}
-	for i := 1; i <= long-letter; i++ {
-		n := rand.Intn(len(word))
-		if rune1[n] == 95 /*95(ASCII) == _ */ {
+	randomIndex := rand.Intn(len(lines))
+	return lines[randomIndex], nil
+}
+
+// Cache certaines lettres du mot
+func motmaque(word string) []rune {
+	runeWord := []rune(word)
+	longueur := len(word)
+	nbLettresMasquees := len(word)/2 - 1
+	if longueur <= 3 {
+		nbLettresMasquees = 1
+	}
+
+	for i := 1; i <= longueur-nbLettresMasquees; i++ {
+		index := rand.Intn(len(word))
+		if runeWord[index] == '_' {
 			i--
-		}
-		rune1[n] = 95
-	}
-	newword := rune1 // le mot est en rune etant donné qu'on l'a modif avec un caractère ASCII
-	/* fin du cachage de lettre */
-
-	//---------------------------------------------------------------------------------------------------------
-
-	/*nombre d'essai de base */
-	liposbis := 0
-	lipos := 7
-	nbr_essai := 10
-
-	//---------------------------------------------------------------------------------------------------------
-
-	for nbrDeTour := -nbr_essai; nbrDeTour <= nbr_essai; nbrDeTour++ {
-		/* demande de la lettre */
-		var lettre string
-		fmt.Println(string(newword))
-		fmt.Printf("entre une lettre :")
-		fmt.Scan(&lettre)
-		fmt.Println("lettre --> ", string(word))
-		/* affiche le pendu selon le nombre d'essais restant */
-		file, err := os.Open("hangman.txt")
-		if nbr_essai >= 0 {
-			if err != nil {
-				fmt.Println("aze")
-			} else {
-				scanner := bufio.NewScanner(file)
-				lineNumber := 0
-				for scanner.Scan() { //cette boucle permet ,selon le nombre d'essai restant dafficher le pendu.
-					if lineNumber < liposbis {
-						lineNumber++
-						continue
-					}
-					if lineNumber > lipos {
-						break
-					}
-					fmt.Println(scanner.Text())
-					lineNumber++
-				}
-			}
-			for i := 0; i < len(word); i++ {
-				if string(word[i]) == lettre {
-					// Si la lettre est trouvée, révéler la lettre dans le mot caché
-					newword[i] = rune(lettre[0])
-				}
-			}
-			if string(newword) == word {
-				break
-			}
-			nbr_essai--
-			liposbis += 8
-			lipos += 8
 			continue
 		}
+		runeWord[index] = '_'
 	}
+	return runeWord
+}
+
+// Affiche le pendu en fonction du nombre d'essais restants
+func displayHangman(nbrEssai int) {
+	file, err := os.Open("hangman.txt")
+	if err != nil {
+		fmt.Println("Erreur lors de l'ouverture du fichier hangman.txt:", err)
+		return
+	}
+	defer file.Close()
+
+	scanner := bufio.NewScanner(file)
+	lineStart := (9 - nbrEssai) * 8
+	lineEnd := lineStart + 8
+	lineNumber := 0
+
+	for scanner.Scan() {
+		if lineNumber >= lineStart && lineNumber < lineEnd {
+			fmt.Println(scanner.Text())
+		}
+		lineNumber++
+	}
+}
+
+// Met à jour le mot masqué avec les lettres devinées
+func updateMaskedWord(motmasque []rune, originalWord string, guess string) {
+	for i := 0; i < len(originalWord); i++ {
+		if string(originalWord[i]) == guess {
+			motmasque[i] = rune(guess[0])
+		}
+	}
+}
+
+// Fonction principale du jeu
+func game() {
+	// Récupération d'un mot aléatoire
+	word, err := lectureWord()
+	if err != nil {
+		fmt.Println("Erreur:", err)
+		return
+	}
+
+	// Création du mot masqué
+	motmasque := motmaque(word)
+
+	// Initialisation des paramètres du jeu
+	nbrEssai := 10
+
+	// Boucle principale du jeu
+	for nbrEssai > 0 {
+		fmt.Println("Mot à deviner :", string(motmasque))
+		displayHangman(nbrEssai)
+
+		// Demande à l'utilisateur d'entrer une lettre
+		fmt.Print("Entrez une lettre : ")
+		var guess string
+		fmt.Scan(&guess)
+
+		// Mise à jour du mot masqué si la lettre est correcte
+		updateMaskedWord(motmasque, word, guess)
+
+		// Vérification de la victoire
+		if string(motmasque) == word {
+			fmt.Println("Félicitations ! Vous avez deviné le mot :", word)
+			return
+		}
+
+		// Réduction du nombre d'essais si la lettre n'est pas trouvée
+		if !contienlettre(word, guess) {
+			nbrEssai--
+			fmt.Println("La lettre que vous avez écris n'est pas présente dans le mot, il vous reste :", nbrEssai, "essai")
+		}
+	}
+	if nbrEssai == 0 {
+		displayHangman(nbrEssai)
+		fmt.Println("Dommage, vous avez perdu. Le mot était :", word)
+	}
+
+}
+
+// Vérifie si le mot contient une lettre donnée
+func contienlettre(word, letter string) bool {
+	for _, char := range word {
+		if string(char) == letter {
+			return true
+		}
+	}
+	return false
 }
