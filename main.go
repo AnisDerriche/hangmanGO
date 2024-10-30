@@ -11,22 +11,22 @@ func main() {
 	game()
 }
 
-// Structure pour stocker l'état de jeu
+/* Structure pour stocker l'état de jeu */
 type GameState struct {
 	Word              string
 	MaskedWord        string
 	RemainingAttempts int
 }
 
-// Fonction pour sauvegarder l'état de jeu dans save.txt
+/* Fonction pour sauvegarder l'état de jeu dans save.txt */
 func saveGame(state GameState) error {
-	file, err := os.Create("save.txt")
+	fichier, err := os.Create("save.txt")
 	if err != nil {
 		return err
 	}
-	defer file.Close()
+	defer fichier.Close()
 
-	_, err = file.WriteString(fmt.Sprintf("%s\n%s\n%d\n", state.Word, state.MaskedWord, state.RemainingAttempts))
+	_, err = fichier.WriteString(fmt.Sprintf("%s\n%s\n%d\n", state.Word, state.MaskedWord, state.RemainingAttempts))
 	if err != nil {
 		return err
 	}
@@ -34,16 +34,16 @@ func saveGame(state GameState) error {
 	return nil
 }
 
-// Fonction pour charger l'état de jeu depuis save.txt
+/* Fonction pour charger l'état de jeu depuis save.txt */
 func loadGame() (GameState, error) {
-	file, err := os.Open("save.txt")
+	fichier, err := os.Open("save.txt")
 	if err != nil {
 		return GameState{}, err
 	}
-	defer file.Close()
+	defer fichier.Close()
 
 	var state GameState
-	scanner := bufio.NewScanner(file)
+	scanner := bufio.NewScanner(fichier)
 
 	if scanner.Scan() {
 		state.Word = scanner.Text()
@@ -54,19 +54,20 @@ func loadGame() (GameState, error) {
 	if scanner.Scan() {
 		fmt.Sscanf(scanner.Text(), "%d", &state.RemainingAttempts)
 	}
+	state.RemainingAttempts++
 	return state, nil
 }
 
-// Lit un mot aléatoire dans le fichier words.txt
+/* Lit un mot aléatoire dans le fichier words.txt */
 func lectureWord() (string, error) {
-	file, err := os.Open("words.txt")
+	fichier, err := os.Open("words.txt")
 	if err != nil {
 		return "", err
 	}
-	defer file.Close()
+	defer fichier.Close()
 
 	var lines []string
-	scanner := bufio.NewScanner(file)
+	scanner := bufio.NewScanner(fichier)
 	for scanner.Scan() {
 		lines = append(lines, scanner.Text())
 	}
@@ -77,7 +78,7 @@ func lectureWord() (string, error) {
 	return lines[randomIndex], nil
 }
 
-// Cache certaines lettres du mot
+/* Cache certaines lettres du mot */
 func motmaque(word string) []rune {
 	runeWord := []rune(word)
 	longueur := len(word)
@@ -97,16 +98,16 @@ func motmaque(word string) []rune {
 	return runeWord
 }
 
-// Affiche le pendu en fonction du nombre d'essais restants
+/* Affiche le pendu en fonction du nombre d'essais restants */
 func displayHangman(nbrEssai int) {
-	file, err := os.Open("hangman.txt")
+	fichier, err := os.Open("hangman.txt")
 	if err != nil {
 		fmt.Println("Erreur lors de l'ouverture du fichier hangman.txt:", err)
 		return
 	}
-	defer file.Close()
+	defer fichier.Close()
 
-	scanner := bufio.NewScanner(file)
+	scanner := bufio.NewScanner(fichier)
 	lineStart := (9 - nbrEssai) * 8
 	lineEnd := lineStart + 8
 	lineNumber := 0
@@ -119,7 +120,7 @@ func displayHangman(nbrEssai int) {
 	}
 }
 
-// Met à jour le mot masqué avec les lettres devinées
+/* Met à jour le mot masqué avec les lettres devinées */
 func updateMaskedWord(motmasque []rune, originalWord string, guess string) {
 	for i := 0; i < len(originalWord); i++ {
 		if string(originalWord[i]) == guess {
@@ -128,54 +129,84 @@ func updateMaskedWord(motmasque []rune, originalWord string, guess string) {
 	}
 }
 
-// Fonction principale du jeu
+var gameState GameState // on utilise la variable gameState a chaque fois que la fonction game est réutilisé pour pouvoir garder les stats du jeu (nbr essai, mot, mot a trou+progression)
+var err error
+
+/* Fonction principale du jeu */
 func game() {
-	// Récupération d'un mot aléatoire
-	word, err := lectureWord()
+
+	gameState.Word, err = lectureWord() // Récupération d'un mot aléatoire
 	if err != nil {
 		fmt.Println("Erreur:", err)
 		return
 	}
+	gameState.MaskedWord = string(motmaque(gameState.Word))
+	gameState.RemainingAttempts = 10
 
-	// Création du mot masqué
-	motmasque := motmaque(word)
+	for gameState.RemainingAttempts > 0 {
+		fmt.Println("Mot à deviner :", gameState.MaskedWord)
+		displayHangman(gameState.RemainingAttempts)
 
-	// Initialisation des paramètres du jeu
-	nbrEssai := 10
-
-	// Boucle principale du jeu
-	for nbrEssai > 0 {
-		fmt.Println("Mot à deviner :", string(motmasque))
-		displayHangman(nbrEssai)
-
-		// Demande à l'utilisateur d'entrer une lettre
 		fmt.Print("Entrez une lettre : ")
 		var guess string
 		fmt.Scan(&guess)
 
 		// Mise à jour du mot masqué si la lettre est correcte
-		updateMaskedWord(motmasque, word, guess)
+		motMasqueRune := []rune(gameState.MaskedWord)
+		updateMaskedWord(motMasqueRune, gameState.Word, guess)
+		gameState.MaskedWord = string(motMasqueRune)
 
 		// Vérification de la victoire
-		if string(motmasque) == word {
-			fmt.Println("Félicitations ! Vous avez deviné le mot :", word)
+		if gameState.MaskedWord == gameState.Word {
+			fmt.Println("Félicitations ! Vous avez deviné le mot :", gameState.Word)
+			os.Remove("save.txt") // Supprime la sauvegarde après la victoire
 			return
 		}
 
 		// Réduction du nombre d'essais si la lettre n'est pas trouvée
-		if !contienlettre(word, guess) {
-			nbrEssai--
-			fmt.Println("La lettre que vous avez écris n'est pas présente dans le mot, il vous reste :", nbrEssai, "essai")
+		if !contienlettre(gameState.Word, guess) {
+			gameState.RemainingAttempts--
+			fmt.Println("Lettre incorrecte, il vous reste :", gameState.RemainingAttempts, "essais")
+		}
+		if guess == "STOP" {
+			Stop()
+		}
+		if len(guess) > 1 && guess != "STOP" {
+			gameState.RemainingAttempts -= 2
+			fmt.Println("ne proposez seulent qu'une seule lettre ")
+
 		}
 	}
-	if nbrEssai == 0 {
-		displayHangman(nbrEssai)
-		fmt.Println("Dommage, vous avez perdu. Le mot était :", word)
-	}
 
+	if gameState.RemainingAttempts <= 0 {
+		displayHangman(gameState.RemainingAttempts)
+		fmt.Println("Dommage, vous avez perdu. Le mot était :", gameState.Word)
+	}
 }
 
-// Vérifie si le mot contient une lettre donnée
+func Stop() {
+
+	if err := saveGame(gameState); err != nil {
+		fmt.Println("Erreur lors de la sauvegarde :", err)
+		return
+	}
+	/* Option pour charger une partie sauvegardée */
+	fmt.Print("Voulez-vous charger une partie sauvegardée ? (o/n): ")
+	var choix string
+	fmt.Scan(&choix)
+	if choix == "o" {
+		gameState, err = loadGame()
+		if err != nil {
+			fmt.Println("Erreur lors du chargement de la sauvegarde:", err)
+			return
+		}
+		fmt.Println("Partie chargée depuis save.txt")
+	} else {
+		game()
+	}
+}
+
+/* Vérifie si le mot contient une lettre donnée */
 func contienlettre(word, letter string) bool {
 	for _, char := range word {
 		if string(char) == letter {
